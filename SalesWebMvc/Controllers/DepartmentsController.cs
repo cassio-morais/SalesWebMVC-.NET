@@ -50,6 +50,7 @@ namespace SalesWebMvc.Controllers
         // GET: Departments/Create
         public IActionResult Create()
         {
+
             return View();
         }
 
