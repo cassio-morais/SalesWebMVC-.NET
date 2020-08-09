@@ -35,9 +35,21 @@ namespace SalesWebMvc
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                                
+                                //tipo do DbContext criado na pasta DATA
+            services.AddDbContext<SalesWebMvcContext>(options =>       // nome da classe de context
+                    options.UseMySql(Configuration.GetConnectionString("SalesWebMvcContext"), 
+                    builder => builder.MigrationsAssembly("SalesWebMvc")));
+            // nome do assembly (projeto)
 
-            services.AddDbContext<SalesWebMvcContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("SalesWebMvcContext")));
+            // instalar o provider do MySql para usar o UseMySql()
+            // abrir o terminal do nuget (gerenciador de pacotes do .net)
+            // tools > nuget Package manager > package manager console
+            // OBS.: instalar a versão do provider de acordo com a versão do .net em uso
+            // no caso: Install-Package Pomelo.EntityFrameworkCore.MySql -Version 2.1.1
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
