@@ -1,7 +1,12 @@
 ﻿@{
     ViewData["Title"] = "About";
-}
-<h2>@ViewData["Title"]</h2>
+} @*Bloco de código c#*@
+
+
+<h2>@ViewData["Title"]</h2> @*A chave title foi definida aqui mesmo dentro do bloco de código c# acima*@
 <h3>@ViewData["Message"]</h3>
 
 <p>Use this area to provide additional information.</p>
+
+<p> Email: @ViewData["email"]</p>
+@*dicionário q eu defini o valor na chamada da action About no HomeController*@

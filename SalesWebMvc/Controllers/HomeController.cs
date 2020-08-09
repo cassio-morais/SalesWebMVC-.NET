@@ -10,16 +10,27 @@ namespace SalesWebMvc.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+
+        // 
+        public IActionResult Index() 
         {
             return View();
         }
 
+        
+        // o IActionResult é uma interface, um super tipo para todo resultado de alguma action
+        // 
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
+            // dicionário 
+            // ex.:
+            ViewData["email"] = "cassiomoraisg@hotmail.com";
 
-            return View();
+            return View(); 
+            // method Builder que retorna um objeto IActionResult, no caso View()
+            // ao instanciar a View ele vai procurar na pasta Views/Home/ uma página about.cshtml (baseado na action) 
+            // url: endereço/home/about
         }
 
         public IActionResult Contact()
