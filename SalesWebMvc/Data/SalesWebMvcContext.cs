@@ -20,5 +20,6 @@ namespace SalesWebMvc.Data
 
         public DbSet<SalesWebMvc.Models.Seller> Seller { get; set; }
 
+
      }
 }
