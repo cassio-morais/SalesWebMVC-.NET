@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using SalesWebMvc.Data;
 using SalesWebMvc.Models;
 
@@ -20,6 +21,12 @@ namespace SalesWebMvc.Services
         {
             // acessa a tabela seller e converte para uma lista
             return _context.Seller.ToList();
+        }
+
+        public void Insert(Seller obj)
+        {
+            _context.Add(obj); // add o obj Seller ao contexto de banco de dados
+            _context.SaveChanges(); // salva as mudanças
         }
 
     }

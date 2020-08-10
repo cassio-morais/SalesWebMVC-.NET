@@ -25,5 +25,22 @@ namespace SalesWebMvc.Controllers
 
             return View(sellersList);
         }
+
+        
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+
+        [HttpPost] // metodo post pegando o formulário enviado
+        [ValidateAntiForgeryToken] // token anti CSRF
+        public IActionResult Create(Seller seller) // recebe o objeto no post
+        {
+            _sellerService.Insert(seller); // chama o Insert do SellerService pra inserir no banco
+
+            return RedirectToAction(nameof(Index)); // retorna para a index
+        }
+
     }
 }
