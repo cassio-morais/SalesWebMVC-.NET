@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Data;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using SalesWebMvc.Services;
 
 namespace SalesWebMvc
 {
@@ -50,8 +51,11 @@ namespace SalesWebMvc
             // no caso: Install-Package Pomelo.EntityFrameworkCore.MySql -Version 2.1.1
 
 
-            services.AddScoped<SeedingService>(); // registra o serviço na sistema de injeção de dependencia da aplicacao
-
+            //serviço de popular banco
+            services.AddScoped<SeedingService>(); // registra o serviço no sistema de injeção de dependencia da aplicacao
+            
+            // serviço de entidade de negócio
+            services.AddScoped<SellerService>(); 
 
 
         }
