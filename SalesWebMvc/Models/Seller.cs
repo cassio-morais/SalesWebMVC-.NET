@@ -13,6 +13,9 @@ namespace SalesWebMvc.Models
         public DateTime BirthDate { get; set; }
         public double BaseSalary { get; set; }
         public Department Department { get; set; }
+        public int DepartmentId { get; set; } // integridade referencial
+        // por padrão ao criar um tipo int de DepartmentId o .net já correlaciona isso no
+        // banco de dados
         public ICollection<SalesRecord> Sales { get; set; } = new List<SalesRecord>();
 
         public Seller()
