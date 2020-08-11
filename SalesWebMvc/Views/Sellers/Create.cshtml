@@ -1,5 +1,7 @@
-﻿@model SalesWebMvc.Models.Seller
-@*modelo para vincular cada atributo da classe Seller aos labels e inputs do formulário*@
+﻿@model SalesWebMvc.Models.ViewModels.SellerFormViewModel;
+@*modelo pra vincular os atributos de Seller e Departments e gerar um view model*@
+
+
 
 
 @{
@@ -16,26 +18,32 @@
             @*action no Post*@
 
             <div class="form-group">
-                @* asp-for vincula o nome do campo ao atributo da classe*@
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                @* asp-for vincula o nome do campo ao atributo dos objetos q vieram no view model*@
+                <label asp-for="Seller.Name" class="control-label"></label>
+                <input asp-for="Seller.Name" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
+                <label asp-for="Seller.Email" class="control-label"></label>
+                <input asp-for="Seller.Email" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="BirthDate" class="control-label"></label>
-                <input asp-for="BirthDate" class="form-control" />
+                <label asp-for="Seller.BirthDate" class="control-label"></label>
+                <input asp-for="Seller.BirthDate" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="BaseSalary" class="control-label"></label>
-                <input asp-for="BaseSalary" class="form-control" />
+                <label asp-for="Seller.BaseSalary" class="control-label"></label>
+                <input asp-for="Seller.BaseSalary" class="form-control" />
             </div>
+
+            <div class="form-group">
+                <label asp-for="Seller.DepartmentId" class="control-label"></label> 
+                <select asp-for="Seller.DepartmentId" asp-items="@(new SelectList(Model.Departments,"Id","Name"))" class="form-control"></select>
+                @*asp-items: constroi os item de uma caixa de seleção, argumentos passados: (fonte de dados da coleção, campo associado ao Seller.DepartmentId, qual atributo vai aparecer na caixa de seleção)*@
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
-
 
 
         </form>

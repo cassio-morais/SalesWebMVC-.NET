@@ -51,12 +51,12 @@ namespace SalesWebMvc
             // no caso: Install-Package Pomelo.EntityFrameworkCore.MySql -Version 2.1.1
 
 
-            //serviço de popular banco
+            //serviço para popular banco de dados
             services.AddScoped<SeedingService>(); // registra o serviço no sistema de injeção de dependencia da aplicacao
             
-            // serviço de entidade de negócio
-            services.AddScoped<SellerService>(); 
-
+            // serviços de entidades de negócio
+            services.AddScoped<SellerService>();
+            services.AddScoped<DepartmentService>();
 
         }
 
