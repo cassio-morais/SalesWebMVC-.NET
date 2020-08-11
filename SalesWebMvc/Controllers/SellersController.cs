@@ -10,6 +10,8 @@ using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using SalesWebMvc.Services.Exceptions;
+using System.Diagnostics;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 
 namespace SalesWebMvc.Controllers
 {
@@ -33,16 +35,16 @@ namespace SalesWebMvc.Controllers
             return View(sellersList);
         }
 
-        
+
         // GET
         public IActionResult Create()
         {
             var departments = _departmentService.FindAll();
-            var sellerViewModel = new SellerFormViewModel { Departments = departments  };
+            var sellerViewModel = new SellerFormViewModel { Departments = departments };
             // cria-se um objeto agrupado que já passa pra view a lista de departments para um Select no HTML
             // e nele vai junto um atributo Seller que será preenchido pelo formulário
-            
-            
+
+
             return View(sellerViewModel);
         }
 
@@ -62,13 +64,13 @@ namespace SalesWebMvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id Not Provided" });
             }
-            
+
             var seller = _sellerService.FindById(id.Value); // por ser opcional, vc tem que passar o Value
             if (seller == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id Not Found" });
             }
 
             return View(seller);
@@ -89,13 +91,13 @@ namespace SalesWebMvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id Not Provided" }); 
             }
 
             var seller = _sellerService.FindById(id.Value); // por ser opcional, vc tem que passar o Value
             if (seller == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id Not Found" }); ;
             }
 
 
@@ -107,19 +109,19 @@ namespace SalesWebMvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id Not Provided" });
             }
 
             if (_sellerService.FindById(id.Value) == null)
             {
-                return NotFound();
-            } 
-                
+                return RedirectToAction(nameof(Error), new { message = "Id Not Found" }); 
+            }
+
             var seller = _sellerService.FindById(id.Value); // pega 1 seller pelo id
             var departments = _departmentService.FindAll(); // pega todos departamentos
-            var sellerViewModel = new SellerFormViewModel { Seller = seller, Departments = departments  }; // monta um objeto composto pra jogar na tela
+            var sellerViewModel = new SellerFormViewModel { Seller = seller, Departments = departments }; // monta um objeto composto pra jogar na tela
 
-            return View(sellerViewModel);          
+            return View(sellerViewModel);
 
         }
 
@@ -130,7 +132,7 @@ namespace SalesWebMvc.Controllers
         {
             if (id != seller.Id)
             {
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new { message = "Id Mismatch" });
             }
 
             try
@@ -138,15 +140,24 @@ namespace SalesWebMvc.Controllers
                 _sellerService.Update(seller);
                 return RedirectToAction(nameof(Index));
             }
-           
-            catch (NotFoundException) // erro personalizado criado em services/exceptions
+
+            catch (ApplicationException e) // Agora usando a super-classe dos erros personalizados (na chamada farão upcasting)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = e.Message });
             }
-            catch (DbConcurrencyExcepction) // erro personalizado criado em services/exceptions
+            
+
+        }
+
+        public IActionResult Error(string message)
+        {
+            var errorViewModel = new ErrorViewModel
             {
-                return BadRequest();
-            }
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                Message = message
+            };
+
+            return View(errorViewModel);
 
         }
 
