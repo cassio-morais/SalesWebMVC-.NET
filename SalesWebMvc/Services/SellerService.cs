@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using SalesWebMvc.Data;
 using SalesWebMvc.Models;
@@ -31,8 +32,8 @@ namespace SalesWebMvc.Services
 
         public Seller FindById(int id)
         {
-            return _context.Seller.FirstOrDefault(seller => seller.Id == id); // retornando o primeiro ou padrão
-      
+            return _context.Seller.Include(obj => obj.Department).FirstOrDefault(obj => obj.Id == id); // retornando o primeiro ou padrão
+                                // funcao do EF para fazer um join com a tabela departamento
         }
 
         public void Remove(int? id) 
@@ -42,5 +43,8 @@ namespace SalesWebMvc.Services
             _context.SaveChanges(); // salva a mudança
 
         }
+
+
+
     }
 }

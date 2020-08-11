@@ -84,5 +84,23 @@ namespace SalesWebMvc.Controllers
         }
 
 
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var seller = _sellerService.FindById(id.Value); // por ser opcional, vc tem que passar o Value
+            if (seller == null)
+            {
+                return NotFound();
+            }
+
+
+            return View(seller);
+        }
+
+
     }
 }
