@@ -9,6 +9,7 @@ using SalesWebMvc.Data;
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using SalesWebMvc.Services.Exceptions;
 
 namespace SalesWebMvc.Controllers
 {
@@ -101,6 +102,53 @@ namespace SalesWebMvc.Controllers
             return View(seller);
         }
 
+
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            if (_sellerService.FindById(id.Value) == null)
+            {
+                return NotFound();
+            } 
+                
+            var seller = _sellerService.FindById(id.Value); // pega 1 seller pelo id
+            var departments = _departmentService.FindAll(); // pega todos departamentos
+            var sellerViewModel = new SellerFormViewModel { Seller = seller, Departments = departments  }; // monta um objeto composto pra jogar na tela
+
+            return View(sellerViewModel);          
+
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Seller seller) // o id já vai estar na url e o obj seller virá pelo post
+        {
+            if (id != seller.Id)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                _sellerService.Update(seller);
+                return RedirectToAction(nameof(Index));
+            }
+           
+            catch (NotFoundException) // erro personalizado criado em services/exceptions
+            {
+                return NotFound();
+            }
+            catch (DbConcurrencyExcepction) // erro personalizado criado em services/exceptions
+            {
+                return BadRequest();
+            }
+
+        }
 
     }
 }
