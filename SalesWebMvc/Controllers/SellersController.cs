@@ -14,8 +14,10 @@ namespace SalesWebMvc.Controllers
 {
     public class SellersController : Controller
     {
+
         private readonly SellerService _sellerService; // declarando uma variável para dependencia do sellerService
         private readonly DepartmentService _departmentService;
+
 
         public SellersController(SellerService sellerService, DepartmentService departmentService) // injetando via construtor
         {
@@ -53,6 +55,34 @@ namespace SalesWebMvc.Controllers
 
             return RedirectToAction(nameof(Index)); // retorna para a index
         }
+
+        // GET - seleciona pra confirmar a deleção
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            
+            var seller = _sellerService.FindById(id.Value); // por ser opcional, vc tem que passar o Value
+            if (seller == null)
+            {
+                return NotFound();
+            }
+
+            return View(seller);
+        }
+
+
+        // POST - Deleta ao confirmar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            _sellerService.Remove(id);
+            return RedirectToAction(nameof(Index));
+        }
+
 
     }
 }
