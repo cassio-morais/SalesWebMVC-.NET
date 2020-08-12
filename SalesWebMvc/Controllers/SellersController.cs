@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using SalesWebMvc.Services.Exceptions;
 using System.Diagnostics;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace SalesWebMvc.Controllers
 {
@@ -39,11 +40,11 @@ namespace SalesWebMvc.Controllers
         // GET
         public IActionResult Create()
         {
+
             var departments = _departmentService.FindAll();
             var sellerViewModel = new SellerFormViewModel { Departments = departments };
             // cria-se um objeto agrupado que já passa pra view a lista de departments para um Select no HTML
             // e nele vai junto um atributo Seller que será preenchido pelo formulário
-
 
             return View(sellerViewModel);
         }
@@ -52,12 +53,23 @@ namespace SalesWebMvc.Controllers
         // POST
         [HttpPost] // metodo post pegando o formulário enviado
         [ValidateAntiForgeryToken] // token anti CSRF
-        public IActionResult Create(Seller seller) // recebe o objeto no post
+        public IActionResult Create(Seller seller) // recebe o objeto no pos
         {
+            if (!ModelState.IsValid) // valida a nível de backend se o objeto está correto de acordo com as restrições da classe
+            {
+                var departments = _departmentService.FindAll();
+                var sellerViewModel = new SellerFormViewModel { Seller = seller, Departments = departments }; 
+                return View(sellerViewModel); // Retorna o objeto completo
+            }
+
             _sellerService.Insert(seller); // chama o Insert do SellerService pra inserir no banco
 
             return RedirectToAction(nameof(Index)); // retorna para a index
         }
+
+
+
+
 
         // GET - seleciona pra confirmar a deleção
         public IActionResult Delete(int? id)
@@ -130,6 +142,14 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Seller seller) // o id já vai estar na url e o obj seller virá pelo post
         {
+
+            if (!ModelState.IsValid) // valida a nível de backend se o objeto está correto de acordo com as restrições da classe
+            {
+                var departments = _departmentService.FindAll();
+                var sellerViewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                return View(sellerViewModel); // Retorna o objeto completo
+            }
+
             if (id != seller.Id)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id Mismatch" });
