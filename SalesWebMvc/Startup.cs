@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Data;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using SalesWebMvc.Services;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace SalesWebMvc
 {
@@ -64,6 +66,20 @@ namespace SalesWebMvc
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, SeedingService seedingService)
                                                                                   // colocando o servico registrado no sistema de injeção de dependencia e ele já cria um objeto instanciado
         {
+
+            // definindo o locale da aplicação para US 
+            var enUS = new CultureInfo("en-US");
+            var localizationOptions = new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(enUS),
+                SupportedCultures = new List<CultureInfo> { enUS },
+                SupportedUICultures = new List<CultureInfo> { enUS }
+            };
+
+            // injetando na aplicacao
+            app.UseRequestLocalization(localizationOptions);
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

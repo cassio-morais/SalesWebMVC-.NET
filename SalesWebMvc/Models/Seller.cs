@@ -1,6 +1,7 @@
 ﻿using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace SalesWebMvc.Models
@@ -9,8 +10,17 @@ namespace SalesWebMvc.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+
+        [Display(Name = "Birth Date")] // Data Anotation pra um nome amigável ao renderizar
+        [DataType(DataType.Date)] // formato data aparecendo a apenas o ano
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")] // formatando padrão brasileiro
         public DateTime BirthDate { get; set; }
+
+        [Display(Name = "Base Salary")]
+        [DisplayFormat(DataFormatString = "{0:F2}")] // 0 : atribudo, F2 : duas casas decimais
         public double BaseSalary { get; set; }
         public Department Department { get; set; }
         public int DepartmentId { get; set; } // integridade referencial
