@@ -12,7 +12,8 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using SalesWebMvc.Services.Exceptions;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
-
+using Microsoft.EntityFrameworkCore;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace SalesWebMvc.controllers
 {
@@ -53,7 +54,7 @@ namespace SalesWebMvc.controllers
         // post
         [HttpPost] // metodo post pegando o formulário enviado
         [ValidateAntiForgeryToken] // token anti csrf
-        public async Task<IActionResult> Create(Seller seller) // recebe o objeto no pos
+        public async Task<IActionResult> Create(Seller seller) // recebe o objeto no post
         {
             if (!ModelState.IsValid) // valida a nível de backend se o objeto está correto de acordo com as restrições da classe
             {
@@ -94,8 +95,15 @@ namespace SalesWebMvc.controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
+            try { 
+
             await _sellerservice.RemoveAsync(id);
             return RedirectToAction(nameof(Index));
+
+            } catch (IntegrityException e)
+            {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
+            }
         }
 
 

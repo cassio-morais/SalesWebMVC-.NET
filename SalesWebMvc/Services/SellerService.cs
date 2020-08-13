@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.UI.Pages.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using SalesWebMvc.Data;
 using SalesWebMvc.Models;
 using SalesWebMvc.Services.Exceptions;
@@ -46,9 +47,18 @@ namespace SalesWebMvc.Services
 
         public async Task RemoveAsync(int? id) 
         {
-            var obj = await _context.Seller.FindAsync(id); // encontra o objeto Seller(vai no banco)
-            _context.Seller.Remove(obj); // remove 
-            await _context.SaveChangesAsync(); // salva a mudança(vai no banco)
+            
+            try {
+
+                var obj = await _context.Seller.FindAsync(id); // encontra o objeto Seller(vai no banco)
+                _context.Seller.Remove(obj); // remove 
+                await _context.SaveChangesAsync(); // salva a mudança(vai no banco)
+
+            } catch(DbUpdateException e) { //pegar o erro de integridade referencial na hora da deleção
+
+                throw new IntegrityException(e.Message); // e lançar o nosso erro através do construtor da classe que override a classe Exception OBS.: posso passar uma msg personalizada
+            
+            }
 
         }
 
