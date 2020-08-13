@@ -21,36 +21,44 @@ namespace SalesWebMvc.Services
             _context = context;
         }
 
-        public List<Seller> FindAll()
+        public async Task<List<Seller>> FindAllAsync()
         {
             // acessa a tabela seller e converte para uma lista
-            return _context.Seller.ToList();
+            return await _context.Seller.ToListAsync();
+
+            // explicado em "DerpartmentService"
         }
 
-        public void Insert(Seller obj)
+        public async Task Insert(Seller obj) // retira o void, como não retorna nada, vc não encapsula o retorn em task
         {
             _context.Add(obj); // add o obj Seller ao contexto de banco de dados
-            _context.SaveChanges(); // salva as mudanças
+            await _context.SaveChangesAsync(); // salva as mudanças usando o método async
+            // OBS.: no _context.Add(obj) ele apenas pega em memória, por isso só usamos na parte de gravar o await
         }
-        
-        public Seller FindById(int id)
-        {
-            return _context.Seller.Include(obj => obj.Department).FirstOrDefault(obj => obj.Id == id); // retornando o primeiro ou padrão
+
+        public async Task<Seller> FindByIdAsync(int id)
+        {                                                              // as operações async são aquelas q realmente acessam o banco
+            return await _context.Seller.Include(obj => obj.Department).FirstOrDefaultAsync(obj => obj.Id == id); // retornando o primeiro ou padrão
                                 // funcao do EF para fazer um join com a tabela departamento
+                                                                            
+
         }
 
-        public void Remove(int? id) 
+        public async Task RemoveAsync(int? id) 
         {
-            var obj = _context.Seller.Find(id); // encontra o objeto Seller
+            var obj = await _context.Seller.FindAsync(id); // encontra o objeto Seller(vai no banco)
             _context.Seller.Remove(obj); // remove 
-            _context.SaveChanges(); // salva a mudança
+            await _context.SaveChangesAsync(); // salva a mudança(vai no banco)
 
         }
 
-        public void Update(Seller obj)
+        public async Task UpdateAsync(Seller obj)
         {
-            // retorna TRUE se determinado objeto NÃO existe na base de dados
-            if (!_context.Seller.Any(x => x.Id == obj.Id)) {
+            bool HasAny = await _context.Seller.AnyAsync(x => x.Id == obj.Id); // retorna TRUE se determinado objeto NÃO existe na base de dados
+
+            // testa o retorno
+            if (!HasAny)
+            { 
 
                 throw new NotFoundException("Id not Found!"); // usando a classe de serviço de exceção criada
 
@@ -58,7 +66,7 @@ namespace SalesWebMvc.Services
             try { 
 
                 _context.Seller.Update(obj);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
             } catch (DbUpdateConcurrencyException e) // erro de acesso ao banco em nível de concorrência
             {

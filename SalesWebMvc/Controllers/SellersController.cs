@@ -11,58 +11,58 @@ using SalesWebMvc.Models.ViewModels;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using SalesWebMvc.Services.Exceptions;
 using System.Diagnostics;
-using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace SalesWebMvc.Controllers
+
+namespace SalesWebMvc.controllers
 {
     public class SellersController : Controller
     {
 
-        private readonly SellerService _sellerService; // declarando uma variável para dependencia do sellerService
-        private readonly DepartmentService _departmentService;
+        private readonly SellerService _sellerservice; // declarando uma variável para dependencia do sellerservice
+        private readonly DepartmentService _departmentservice;
 
 
-        public SellersController(SellerService sellerService, DepartmentService departmentService) // injetando via construtor
+        public SellersController(SellerService sellerservice, DepartmentService departmentservice) // injetando via construtor
         {
-            _sellerService = sellerService;
-            _departmentService = departmentService;
+            _sellerservice = sellerservice;
+            _departmentservice = departmentservice;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var sellersList = _sellerService.FindAll();
+            var sellerslist = await _sellerservice.FindAllAsync();
 
-            return View(sellersList);
-        }
-
-
-        // GET
-        public IActionResult Create()
-        {
-
-            var departments = _departmentService.FindAll();
-            var sellerViewModel = new SellerFormViewModel { Departments = departments };
-            // cria-se um objeto agrupado que já passa pra view a lista de departments para um Select no HTML
-            // e nele vai junto um atributo Seller que será preenchido pelo formulário
-
-            return View(sellerViewModel);
+            return View(sellerslist);
         }
 
 
-        // POST
+        // get
+        public async Task<IActionResult> Create()
+        {
+
+            var departments = await _departmentservice.FindAllAsync();
+            var sellerviewmodel = new SellerFormViewModel { Departments = departments };
+            // cria-se um objeto agrupado que já passa pra view a lista de departments para um select no html
+            // e nele vai junto um atributo seller que será preenchido pelo formulário
+
+            return View(sellerviewmodel);
+        }
+
+
+        // post
         [HttpPost] // metodo post pegando o formulário enviado
-        [ValidateAntiForgeryToken] // token anti CSRF
-        public IActionResult Create(Seller seller) // recebe o objeto no pos
+        [ValidateAntiForgeryToken] // token anti csrf
+        public async Task<IActionResult> Create(Seller seller) // recebe o objeto no pos
         {
             if (!ModelState.IsValid) // valida a nível de backend se o objeto está correto de acordo com as restrições da classe
             {
-                var departments = _departmentService.FindAll();
-                var sellerViewModel = new SellerFormViewModel { Seller = seller, Departments = departments }; 
-                return View(sellerViewModel); // Retorna o objeto completo
+                var departments = await _departmentservice.FindAllAsync();
+                var sellerviewmodel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                return View(sellerviewmodel); // retorna o objeto completo
             }
 
-            _sellerService.Insert(seller); // chama o Insert do SellerService pra inserir no banco
+            await _sellerservice.Insert(seller); // chama o insert do sellerservice pra inserir no banco
 
             return RedirectToAction(nameof(Index)); // retorna para a index
         }
@@ -71,45 +71,45 @@ namespace SalesWebMvc.Controllers
 
 
 
-        // GET - seleciona pra confirmar a deleção
-        public IActionResult Delete(int? id)
+        // get - seleciona pra confirmar a deleção
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
-                return RedirectToAction(nameof(Error), new { message = "Id Not Provided" });
+                return RedirectToAction(nameof(Error), new { Message = "id not provided" });
             }
 
-            var seller = _sellerService.FindById(id.Value); // por ser opcional, vc tem que passar o Value
+            var seller = await _sellerservice.FindByIdAsync(id.Value); // por ser opcional, vc tem que passar o value
             if (seller == null)
             {
-                return RedirectToAction(nameof(Error), new { message = "Id Not Found" });
+                return RedirectToAction(nameof(Error), new { Message = "id not found" });
             }
 
             return View(seller);
         }
 
 
-        // POST - Deleta ao confirmar
+        // post - deleta ao confirmar
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _sellerService.Remove(id);
+            await _sellerservice.RemoveAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
 
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
-                return RedirectToAction(nameof(Error), new { message = "Id Not Provided" }); 
+                return RedirectToAction(nameof(Error), new { message = "id not provided" });
             }
 
-            var seller = _sellerService.FindById(id.Value); // por ser opcional, vc tem que passar o Value
+            var seller = await _sellerservice.FindByIdAsync(id.Value); // por ser opcional, vc tem que passar o value
             if (seller == null)
             {
-                return RedirectToAction(nameof(Error), new { message = "Id Not Found" }); ;
+                return RedirectToAction(nameof(Error), new { message = "id not found" }); ;
             }
 
 
@@ -117,67 +117,67 @@ namespace SalesWebMvc.Controllers
         }
 
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
-                return RedirectToAction(nameof(Error), new { message = "Id Not Provided" });
+                return RedirectToAction(nameof(Error), new { message = "id not provided" });
             }
 
-            if (_sellerService.FindById(id.Value) == null)
+            if (await _sellerservice.FindByIdAsync(id.Value) == null)
             {
-                return RedirectToAction(nameof(Error), new { message = "Id Not Found" }); 
+                return RedirectToAction(nameof(Error), new { message = "id not found" });
             }
 
-            var seller = _sellerService.FindById(id.Value); // pega 1 seller pelo id
-            var departments = _departmentService.FindAll(); // pega todos departamentos
-            var sellerViewModel = new SellerFormViewModel { Seller = seller, Departments = departments }; // monta um objeto composto pra jogar na tela
+            var seller = await _sellerservice.FindByIdAsync(id.Value); // pega 1 seller pelo id
+            var departments = await _departmentservice.FindAllAsync(); // pega todos departamentos
+            var sellerviewmodel = new SellerFormViewModel { Seller = seller, Departments = departments }; // monta um objeto composto pra jogar na tela
 
-            return View(sellerViewModel);
+            return View(sellerviewmodel);
 
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Seller seller) // o id já vai estar na url e o obj seller virá pelo post
+        public async Task<IActionResult> Edit(int id, Seller seller) // o id já vai estar na url e o obj seller virá pelo post
         {
 
             if (!ModelState.IsValid) // valida a nível de backend se o objeto está correto de acordo com as restrições da classe
             {
-                var departments = _departmentService.FindAll();
-                var sellerViewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
-                return View(sellerViewModel); // Retorna o objeto completo
+                var departments = await _departmentservice.FindAllAsync();
+                var sellerviewmodel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                return View(sellerviewmodel); // retorna o objeto completo
             }
 
             if (id != seller.Id)
             {
-                return RedirectToAction(nameof(Error), new { message = "Id Mismatch" });
+                return RedirectToAction(nameof(Error), new { Message = "id mismatch" });
             }
 
             try
             {
-                _sellerService.Update(seller);
+                await _sellerservice.UpdateAsync(seller);
                 return RedirectToAction(nameof(Index));
             }
 
-            catch (ApplicationException e) // Agora usando a super-classe dos erros personalizados (na chamada farão upcasting)
+            catch (ApplicationException e) // agora usando a super-classe dos erros personalizados (na chamada farão upcasting)
             {
                 return RedirectToAction(nameof(Error), new { message = e.Message });
             }
-            
+
 
         }
 
-        public IActionResult Error(string message)
+        public IActionResult Error(string message) // erro não se torna assíncrono pq, nesse caso, ele não faz nenhuma operação no banco
         {
-            var errorViewModel = new ErrorViewModel
+            var errorviewmodel = new ErrorViewModel
             {
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
                 Message = message
             };
 
-            return View(errorViewModel);
+            return View(errorviewmodel);
 
         }
 
