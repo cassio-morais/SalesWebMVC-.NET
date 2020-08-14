@@ -59,6 +59,7 @@ namespace SalesWebMvc
             // serviços de entidades de negócio
             services.AddScoped<SellerService>();
             services.AddScoped<DepartmentService>();
+            services.AddScoped<SalesRecordService>();
 
         }
 
