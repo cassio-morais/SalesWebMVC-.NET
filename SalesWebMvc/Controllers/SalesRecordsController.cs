@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SalesWebMvc.Models;
+using SalesWebMvc.Models.Enums;
+using SalesWebMvc.Models.ViewModels;
 using SalesWebMvc.Services;
 
 namespace SalesWebMvc.Controllers
@@ -12,16 +14,28 @@ namespace SalesWebMvc.Controllers
     {
 
         private readonly SalesRecordService _salesRecord;
+        private readonly SellerService _sellerService;
 
-        public SalesRecordsController(SalesRecordService salesRecord)
+        public SalesRecordsController(SalesRecordService salesRecord, SellerService sellerService)
         {
             _salesRecord = salesRecord;
+            _sellerService = sellerService;
         }
 
         public IActionResult Index()
         {
             return View();
         }
+
+
+        public async Task<IActionResult> CreateSale()
+        {
+            var sellers = await _sellerService.FindAllAsync();
+           var viewModel = new SaleFormViewModel { Sellers = sellers };
+
+            return View(viewModel);
+
+       }
 
         public async Task<IActionResult> SimpleSearch(DateTime? minDate, DateTime? maxDate)
         {
