@@ -19,6 +19,6 @@
 ## O que foi Refatorado no projeto
 
 * O scaffolding feito com a classe Departments foi refeita para separação de responsabilidades em camadas.
- * DbContext > Service > Controller > View
+  * DbContext > Service > Controller > View
 
 * Criação de um cadastro de SalesRecord para cadastrar vendas para vendedores.
