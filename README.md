@@ -1,4 +1,4 @@
-## Sistema de vendas baseado no projeto do curso de .NET do professor [Nélio Alves](https://www.udemy.com/course/programacao-orientada-a-objetos-csharp/) ##
+## Sistema de vendas baseado no projeto do curso de .NET do Professor [Nélio Alves](https://www.udemy.com/course/programacao-orientada-a-objetos-csharp/) ##
 
 #### Tecnologias usadas: ASP.NET CORE MVC, Bootstrap e Mysql
 
@@ -20,3 +20,5 @@
 
 * O scaffolding feito com a classe Departments foi refeita para separação de responsabilidades em camadas.
  * DbContext > Service > Controller > View
+
+* Criação de um cadastro de SalesRecord para cadastrar vendas para vendedores.
