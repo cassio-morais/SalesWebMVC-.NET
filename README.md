@@ -14,7 +14,7 @@
   * Configuração de busca simples e agrupada por datas para as SalesRecord.
   * Configuração de locale para EUA (projeto em inglês).
 
-## O que foi Refatorado no projeto
+## O que foi refatorado no projeto após o término do curso:
 
 * O scaffolding feito com a classe Departments foi refeita para separação de responsabilidades em camadas.
   * DbContext > Service > Controller > View
