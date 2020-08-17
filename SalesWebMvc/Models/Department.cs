@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace SalesWebMvc.Models
@@ -7,6 +8,8 @@ namespace SalesWebMvc.Models
     public class Department
     {
         public int Id { get; set; }
+
+        [Required]
         public string Name { get; set; }
         // Icollection: colecao generica que engloba listas, hashset... 
         public ICollection<Seller> Sellers { get; set; } = new List<Seller>();
