@@ -12,11 +12,11 @@
   * criação de um CRUD automático para os Departments a partir de uma ferramenta de Scaffolding do Visual Studio 2019.
   * Criação de Controllers, Views e Services (injeção de dependência) para Sellers e SalesRecord.
   * Criação de ViewModels para composição de objetos a se mostrar na tela.
-  * 
   * criação de Exceptions personalizadas da camada de dados, passando pelo Service até a camada de controller.
   * Configuração de busca simples e agrupada por datas para as SalesRecord.
   * Configuração de locale para EUA (projeto em inglês).
 
-## O que foi refatorado no projeto
+## O que foi Refatorado no projeto
 
-* O scaffolding feito com a classe Departments foi refeita para separação de responsabilidades em camadas
+* O scaffolding feito com a classe Departments foi refeita para separação de responsabilidades em camadas.
+ * DbContext > Service > Controller > View
