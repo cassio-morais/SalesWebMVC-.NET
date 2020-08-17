@@ -17,6 +17,13 @@ namespace SalesWebMvc.Services
             _context = context;
         }
 
+        public async Task Insert(SalesRecord obj)
+        {
+            _context.Add(obj);
+            await _context.SaveChangesAsync();
+        }
+
+
         public async Task<List<SalesRecord>> FindByDateAsync(DateTime? minDate, DateTime? maxDate)
         {
             var result = from obj in _context.SalesRecord select obj; // pega o dbset e transforma em objeto para tratarmos com o linq

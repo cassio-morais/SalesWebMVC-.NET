@@ -1,0 +1,49 @@
+﻿@model SalesWebMvc.Models.ViewModels.SalesRecordFormViewModel;
+
+@{
+    ViewData["Title"] = "Create a Sale";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+
+
+<div class="row">
+    <div class="col-md-4">
+
+        <form asp-action="CreateSale">
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="SalesRecord.Date" class="control-label"></label>
+                <input asp-for="SalesRecord.Date" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="SalesRecord.Amount" class="control-label"></label>
+                <input asp-for="SalesRecord.Amount" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="SalesRecord.Status" class="control-label"></label>
+                <select asp-for="SalesRecord.Status" asp-items=@(new SelectList(Enum.GetValues(typeof(SalesWebMvc.Models.Enums.SalesStatus)))) class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="SalesRecord.SellerId" class="control-label"></label>
+                <select asp-for="SalesRecord.SellerId" asp-items=@(new SelectList(Model.Sellers,"Id","Name")) class="form-control"></select>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+
+        </form>
+
+
+    </div>
+</div>
+
+
+@*Validação client-side*@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -8,13 +8,19 @@ namespace SalesWebMvc.Models
     {
         public int Id { get; set; }
 
+        [Required]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:F2}")]
         public double Amount { get; set; }
+
         public SalesStatus Status { get; set; }
+        
         public Seller Seller { get; set; }
+        public int SellerId { get; set; }
+
 
         public SalesRecord()
         {
