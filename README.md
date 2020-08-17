@@ -2,4 +2,4 @@
 
 Diagrama do projeto:
 
-![Diagrama](https://github.com/cassio-morais/SalesWebMVC-.NET/blob/master/img/diagrama.JPG | 50X50 )
+![Diagrama](https://github.com/cassio-morais/SalesWebMVC-.NET/blob/master/img/diagrama.JPG)
