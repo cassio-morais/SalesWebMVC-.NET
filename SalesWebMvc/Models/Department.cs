@@ -40,7 +40,7 @@ namespace SalesWebMvc.Models
             // reaproveitando o total de vendas de cada vendedor
 
             return total;
-        } 
-    
+        }
+
     }
 }

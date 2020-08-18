@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Remotion.Linq.Clauses;
 using SalesWebMvc.Services;
-using SalesWebMvc.Data;
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using SalesWebMvc.Services.Exceptions;
 using System.Diagnostics;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SalesWebMvc.controllers
 {
@@ -21,13 +14,13 @@ namespace SalesWebMvc.controllers
     {
 
         private readonly SellerService _sellerservice; // declarando uma variável para dependencia do sellerservice
-        private readonly DepartmentService _departmentservice;
+        private readonly DepartmentService _departmentService;
 
 
         public SellersController(SellerService sellerservice, DepartmentService departmentservice) // injetando via construtor
         {
             _sellerservice = sellerservice;
-            _departmentservice = departmentservice;
+            _departmentService = departmentservice;
         }
 
         public async Task<IActionResult> Index()
@@ -42,12 +35,9 @@ namespace SalesWebMvc.controllers
         public async Task<IActionResult> Create()
         {
 
-            var departments = await _departmentservice.FindAllAsync();
-            var sellerviewmodel = new SellerFormViewModel { Departments = departments };
-            // cria-se um objeto agrupado que já passa pra view a lista de departments para um select no html
-            // e nele vai junto um atributo seller que será preenchido pelo formulário
-
-            return View(sellerviewmodel);
+           ViewBag.Departments = new SelectList(await _departmentService.FindAllAsync(),"Id","Name"); 
+          
+           return View();
         }
 
 
@@ -58,9 +48,8 @@ namespace SalesWebMvc.controllers
         {
             if (!ModelState.IsValid) // valida a nível de backend se o objeto está correto de acordo com as restrições da classe
             {
-                var departments = await _departmentservice.FindAllAsync();
-                var sellerviewmodel = new SellerFormViewModel { Seller = seller, Departments = departments };
-                return View(sellerviewmodel); // retorna o objeto completo
+               ViewBag.departments = new SelectList(await _departmentService.FindAllAsync(), "Id", "Name", seller.DepartmentId);
+               return View(); // retorna o objeto completo
             }
 
             await _sellerservice.Insert(seller); // chama o insert do sellerservice pra inserir no banco
@@ -137,11 +126,11 @@ namespace SalesWebMvc.controllers
                 return RedirectToAction(nameof(Error), new { message = "id not found" });
             }
 
-            var seller = await _sellerservice.FindByIdAsync(id.Value); // pega 1 seller pelo id
-            var departments = await _departmentservice.FindAllAsync(); // pega todos departamentos
-            var sellerviewmodel = new SellerFormViewModel { Seller = seller, Departments = departments }; // monta um objeto composto pra jogar na tela
+            var seller = await _sellerservice.FindByIdAsync(id.Value);
+            ViewBag.Departments = new SelectList(await _departmentService.FindAllAsync(), "Id", "Name", seller.DepartmentId); // pega todos departamentos
+           
 
-            return View(sellerviewmodel);
+            return View(seller);
 
         }
 
@@ -153,9 +142,9 @@ namespace SalesWebMvc.controllers
 
             if (!ModelState.IsValid) // valida a nível de backend se o objeto está correto de acordo com as restrições da classe
             {
-                var departments = await _departmentservice.FindAllAsync();
-                var sellerviewmodel = new SellerFormViewModel { Seller = seller, Departments = departments };
-                return View(sellerviewmodel); // retorna o objeto completo
+                //var seller = await _sellerservice.FindByIdAsync(id);
+                ViewBag.Departments = new SelectList(await _departmentService.FindAllAsync(), "Id", "Name", seller.DepartmentId);
+                return View(seller); // retorna o objeto completo
             }
 
             if (id != seller.Id)

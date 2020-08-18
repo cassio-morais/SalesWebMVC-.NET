@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using SalesWebMvc.Data;
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
 using SalesWebMvc.Services;
@@ -22,7 +17,7 @@ namespace SalesWebMvc.Controllers
 
         public DepartmentsController(DepartmentService departmentService)
         {
-           _departmentService = departmentService;
+            _departmentService = departmentService;
         }
 
 
@@ -107,7 +102,7 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Department department)
         {
-            if (id != department.Id) 
+            if (id != department.Id)
             {
                 return RedirectToAction(nameof(Index), new { message = "Id Not Found" });
             }
@@ -182,8 +177,6 @@ namespace SalesWebMvc.Controllers
 
         }
 
-
-
-
     }
 }
+

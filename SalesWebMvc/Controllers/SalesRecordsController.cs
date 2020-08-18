@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.Enums;
-using SalesWebMvc.Models.ViewModels;
 using SalesWebMvc.Services;
 
 namespace SalesWebMvc.Controllers
@@ -31,37 +28,29 @@ namespace SalesWebMvc.Controllers
 
         public async Task<IActionResult> CreateSale()
         {
-           var sellers = await _sellerService.FindAllAsync();
-           var viewModel = new SalesRecordFormViewModel { Sellers = sellers };
+            ViewBag.Status = new SelectList(Enum.GetValues(typeof(SalesStatus)));
+            ViewBag.Sellers = new SelectList(await _sellerService.FindAllAsync(), "Id", "Name");
 
-            return View(viewModel);
+            return View();
 
-       }
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateSale(SalesRecordFormViewModel ViewObj) // passando o viewModel por completo
+        public async Task<IActionResult> CreateSale(SalesRecord obj) // passando o viewModel por completo
         {
             if (!ModelState.IsValid)
             {
-                var sellers = await _sellerService.FindAllAsync();
-                var viewModel = new SalesRecordFormViewModel { Sellers = sellers };
+                ViewBag.Status = new SelectList(Enum.GetValues(typeof(SalesStatus)));
+                ViewBag.Sellers = new SelectList(await _sellerService.FindAllAsync(), "Id", "Name", obj.SellerId);
 
-                return View(viewModel);
+                return View();
+
             }
-             
-            SalesRecord obj = new SalesRecord // não consegui pegar o objeto SalesRecord no Create Sale ¯\_(ツ)_/¯
-            {
-                Date = ViewObj.SalesRecord.Date,
-                Amount = ViewObj.SalesRecord.Amount,
-                Status = ViewObj.SalesRecord.Status,
-                SellerId = ViewObj.SalesRecord.SellerId
-            };
-            
-            await _salesRecordService.Insert(obj);
 
+            await _salesRecordService.Insert(obj);
             return RedirectToAction(nameof(Index));
-           
+
         }
 
 
@@ -82,7 +71,7 @@ namespace SalesWebMvc.Controllers
             ViewData["maxDate"] = maxDate.Value.ToString("yyyy-MM-dd");
 
             var result = await _salesRecordService.FindByDateAsync(minDate.Value, maxDate.Value);
-            
+
             return View(result);
         }
 
