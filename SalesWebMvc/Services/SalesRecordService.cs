@@ -38,10 +38,10 @@ namespace SalesWebMvc.Services
 
         public async Task UpdateAsync(SalesRecord obj)
         {
-            
+
             if (!await _context.SalesRecord.AnyAsync(sale => sale.Id == obj.Id)) // ver SellerService UpdateAsync
             {
-                throw new NotFoundException("Id not Found!"); 
+                throw new NotFoundException("Id not Found!");
             }
 
             try

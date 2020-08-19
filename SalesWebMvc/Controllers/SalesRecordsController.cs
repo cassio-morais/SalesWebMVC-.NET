@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.Enums;
 using SalesWebMvc.Models.ViewModels;
@@ -163,11 +162,12 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteSale(int id)
         {
-            try { 
+            try
+            {
                 await _salesRecordService.RemoveAsync(id);
                 return RedirectToAction(nameof(Index));
-            } 
-            catch(ApplicationException e)
+            }
+            catch (ApplicationException e)
             {
                 return View(nameof(Error), new { e.Message });
             }

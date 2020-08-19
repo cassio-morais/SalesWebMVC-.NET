@@ -6,7 +6,7 @@
 
   * Criação das classes e enums a partir de um diagrama UML e depois de um DbContext usando Entity Framework (CODE-FIRST). 
   * Configuração do DbContext para uso do Mysql.
-  * Criação de um serviço de Seed para popular o banco de dados em mode de desenvolvimento.
+  * Criação de um serviço de Seed para popular o banco de dados em modo de desenvolvimento.
   * Criação de um CRUD automático para os Departments a partir de uma ferramenta de Scaffolding do Visual Studio 2019.
   * Criação de Controllers, Views e Services (injeção de dependência) para Sellers.
   * Criação de ViewModels para composição de objetos a se mostrar na tela.
@@ -20,3 +20,9 @@
   * DbContext > Service > Controller > View
 
 * Criação de um cadastro de SalesRecord para cadastrar vendas para vendedores.
+
+* Criação de edição, deleção e visualização para SalesRecord (incluindo exceções).
+
+* Exclusão da HomeController e suas Views.
+
+* Organização e formatação de Código.

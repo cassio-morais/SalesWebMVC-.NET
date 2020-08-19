@@ -71,8 +71,8 @@ namespace SalesWebMvc.Models
             var total = Sales
                 .Where(sale => sale.Date >= initial && sale.Date <= final)
                 .Sum(sale => sale.Amount);
-                
-            return total; 
+
+            return total;
         }
 
 

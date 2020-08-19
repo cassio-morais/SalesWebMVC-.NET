@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.UI.Pages.Internal;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
-using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using SalesWebMvc.Data;
 using SalesWebMvc.Models;
 using SalesWebMvc.Services.Exceptions;
@@ -40,24 +34,27 @@ namespace SalesWebMvc.Services
         public async Task<Seller> FindByIdAsync(int id)
         {                                                              // as operações async são aquelas q realmente acessam o banco
             return await _context.Seller.Include(obj => obj.Department).FirstOrDefaultAsync(obj => obj.Id == id); // retornando o primeiro ou padrão
-                                // funcao do EF para fazer um join com a tabela departamento
-                                                                            
+                                                                                                                  // funcao do EF para fazer um join com a tabela departamento
+
 
         }
 
-        public async Task RemoveAsync(int? id) 
+        public async Task RemoveAsync(int? id)
         {
-            
-            try {
+
+            try
+            {
 
                 var obj = await _context.Seller.FindAsync(id); // encontra o objeto Seller(vai no banco)
                 _context.Seller.Remove(obj); // remove 
                 await _context.SaveChangesAsync(); // salva a mudança(vai no banco)
 
-            } catch(DbUpdateException e) { //pegar o erro de integridade referencial na hora da deleção
+            }
+            catch (DbUpdateException e)
+            { //pegar o erro de integridade referencial na hora da deleção
 
                 throw new IntegrityException(e.Message); // e lançar o nosso erro através do construtor da classe que override a classe Exception OBS.: posso passar uma msg personalizada
-            
+
             }
 
         }
@@ -68,17 +65,19 @@ namespace SalesWebMvc.Services
 
             // testa o retorno
             if (!HasAny)
-            { 
+            {
 
                 throw new NotFoundException("Id not Found!"); // usando a classe de serviço de exceção criada
 
             }
-            try { 
+            try
+            {
 
                 _context.Seller.Update(obj);
                 await _context.SaveChangesAsync();
 
-            } catch (DbUpdateConcurrencyException e) // erro de acesso ao banco em nível de concorrência
+            }
+            catch (DbUpdateConcurrencyException e) // erro de acesso ao banco em nível de concorrência
             {
                 throw new DbConcurrencyExcepction(e.Message); // jogando a exceção a nível de aplicação para o controller.
 

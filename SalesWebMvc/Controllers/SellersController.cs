@@ -35,9 +35,9 @@ namespace SalesWebMvc.controllers
         public async Task<IActionResult> Create()
         {
 
-           ViewBag.Departments = new SelectList(await _departmentService.FindAllAsync(),"Id","Name"); 
-          
-           return View();
+            ViewBag.Departments = new SelectList(await _departmentService.FindAllAsync(), "Id", "Name");
+
+            return View();
         }
 
 
@@ -48,8 +48,8 @@ namespace SalesWebMvc.controllers
         {
             if (!ModelState.IsValid) // valida a nível de backend se o objeto está correto de acordo com as restrições da classe
             {
-               ViewBag.departments = new SelectList(await _departmentService.FindAllAsync(), "Id", "Name", seller.DepartmentId);
-               return View(); // retorna o objeto completo
+                ViewBag.departments = new SelectList(await _departmentService.FindAllAsync(), "Id", "Name", seller.DepartmentId);
+                return View(); // retorna o objeto completo
             }
 
             await _sellerservice.Insert(seller); // chama o insert do sellerservice pra inserir no banco
@@ -84,12 +84,14 @@ namespace SalesWebMvc.controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            try { 
+            try
+            {
 
-            await _sellerservice.RemoveAsync(id);
-            return RedirectToAction(nameof(Index));
+                await _sellerservice.RemoveAsync(id);
+                return RedirectToAction(nameof(Index));
 
-            } catch (IntegrityException e)
+            }
+            catch (IntegrityException e)
             {
                 return RedirectToAction(nameof(Error), new { message = e.Message });
             }
@@ -128,7 +130,7 @@ namespace SalesWebMvc.controllers
 
             var seller = await _sellerservice.FindByIdAsync(id.Value);
             ViewBag.Departments = new SelectList(await _departmentService.FindAllAsync(), "Id", "Name", seller.DepartmentId); // pega todos departamentos
-           
+
 
             return View(seller);
 

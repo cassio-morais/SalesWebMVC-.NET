@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Data;
 using SalesWebMvc.Models;
@@ -13,7 +10,7 @@ namespace SalesWebMvc.Services
 {
     public class DepartmentService
     {
-        private readonly SalesWebMvcContext _context; 
+        private readonly SalesWebMvcContext _context;
 
         public DepartmentService(SalesWebMvcContext context)
         {
@@ -51,7 +48,7 @@ namespace SalesWebMvc.Services
                 throw new DbConcurrencyExcepction(e.Message);
 
             }
-        }    
+        }
 
 
 
@@ -65,7 +62,7 @@ namespace SalesWebMvc.Services
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException e)
-            { 
+            {
                 throw new IntegrityException(e.Message);
 
             }
